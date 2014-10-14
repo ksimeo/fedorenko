@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="exit-poll:war">
+    <output-path>$PROJECT_DIR$/exit-poll/target</output-path>
+    <root id="archive" name="VoteRest.war">
+      <element id="artifact" artifact-name="exit-poll:war exploded" />
+    </root>
+  </artifact>
+</component>

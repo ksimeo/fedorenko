@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Exit-Poll(JSF).iml" filepath="$PROJECT_DIR$/Exit-Poll(JSF).iml" />
+      <module fileurl="file://$PROJECT_DIR$/exit-poll/exit-poll.iml" filepath="$PROJECT_DIR$/exit-poll/exit-poll.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vote-core/vote-core.iml" filepath="$PROJECT_DIR$/vote-core/vote-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/vote-view/vote-view.iml" filepath="$PROJECT_DIR$/vote-view/vote-view.iml" />
+    </modules>
+  </component>
+</project>
+
