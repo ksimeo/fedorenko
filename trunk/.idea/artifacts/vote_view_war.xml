@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="vote-view:war">
+    <output-path>$PROJECT_DIR$/vote-view/target</output-path>
+    <root id="archive" name="exit-poll_with_jsf.war">
+      <element id="artifact" artifact-name="vote-view:war exploded" />
+    </root>
+  </artifact>
+</component>
