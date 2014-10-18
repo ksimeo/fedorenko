@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:c="http://java.sun.com/jsf/facelets">
 <h:head>
     <title>Список партий</title>
 </h:head>
@@ -17,15 +17,25 @@
             <td>Description</td>
             <td>Choice Pole</td>
         </tr>
-        <c:forEach var="party" items="#{pageBean.allParty}">
-            <tr>
-                <td>#{party.id}</td>
-                <td>${party.name}</td>
-                <td>${party.description}</td>
-                <td>${pageBean.}</td>
-            </tr>
-        </c:forEach>
-        <h:commandButton value="Проголосовать" action="#{pageBean.doChoice()}"></h:commandButton>
+        <h:dataTable var="p" value="#{voterBean.parties}">
+            <h:column>
+                <f:facet name="header">No</f:facet>
+                #{voterBean.getPartyList()}
+            </h:column>
+            <h:column>
+                <f:facet name="header">Name of party</f:facet>
+                #{p.getId}
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Description</f:facet>
+            </h:column>
+
+            <h:column>
+                <h:selectBooleanCheckbox value="#{voterBean.checked[party.id]}" />
+            </h:column>
+        </h:dataTable>
+        <h:commandButton value="Проголосовать" action="#{voterBean.doVote()}"></h:commandButton>
     </h:form>
 </h:body>
 </html>

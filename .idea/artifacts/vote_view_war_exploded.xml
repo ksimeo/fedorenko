@@ -2,7 +2,6 @@
   <artifact type="exploded-war" name="vote-view:war exploded">
     <output-path>$PROJECT_DIR$/vote-view/target/exit-poll_with_jsf</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="vote-view/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="vote-view" />
@@ -29,8 +28,11 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-context:3.1.4.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-expression:3.1.4.RELEASE" />
           <element id="library" level="project" name="Maven: org.aspectj:aspectjrt:1.7.2" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.13" />
+          <element id="library" level="project" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="vote-view/web/Web" />
     </root>
   </artifact>
 </component>

@@ -4,10 +4,9 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$/exit-poll" />
-    <file type="web" url="file://$PROJECT_DIR$/vote-view" />
+    <file type="web" url="file://$PROJECT_DIR$" />
   </component>
-  <component name="IdProvider" IDEtalkID="CC0ABB01B1BD8A1ACB37183A3A715912" />
+  <component name="IdProvider" IDEtalkID="90B7A3C1E642CA2114F1EF3A28DF1B86" />
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>

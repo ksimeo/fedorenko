@@ -2,33 +2,55 @@ package fma.ua.dp.levelup.beans;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import fma.ua.dp.levelup.communication.IVoteSystem;
-import fma.ua.dp.levelup.communication.VoteSystem;
+import javax.faces.model.ArrayDataModel;
+import javax.faces.model.DataModel;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import fma.ua.dp.levelup.communicat.IVoteSystem;
+import fma.ua.dp.levelup.communicat.VoteSystemRest;
+import fma.ua.dp.levelup.models.Party;
+import org.springframework.stereotype.Component;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Admin on 12.10.2014.
+ * Created by Admin on 13.10.2014.
  */
+@Component
 @ManagedBean
 @SessionScoped
-public class VoterBean {
-    private String email;
+public class VoterBean implements Serializable {
 
-    private IVoteSystem vs = new VoteSystem();
+    IVoteSystem vs = new VoteSystemRest();
+    private List<Party> parties = vs.getParties();
+    private boolean isError;
+    private Map<Long, Boolean> checked = new HashMap<Long, Boolean>();
 
-    public String doIdentificate(String email) throws Exception{
+    public String submit() {
+        Party checkedParty;
+        int checkCount = 0;
+        for (Party party : parties) {
+            if (checked.get(party.getId())) {
+                checkedParty = party;
+                checkCount++;
+            }
+        }
 
-        String isDoneChoise = vs.sendPost("http://localhost:8080/vote", email);
+//        if(checkCount == null && checkCount > 1) {
+//            isError = true;
+//        } else {
+            UserBean ub = new UserBean();
+            vs.vote(ub.getEmail(), checkedParty);
+            return "/election_results";
+        }
+    }
 
-       if(isDoneChoise == "true") {
+    private DataModel<Party> party = new ArrayDataModel<>(parties);
 
-           return "http://localhost:8080//election_results";
-
-       } else {
-
-           return "http://localhost:8080///voter_page";
-       }
+    public DataModel<Party> getPartyList() {
+        return party;
     }
 }

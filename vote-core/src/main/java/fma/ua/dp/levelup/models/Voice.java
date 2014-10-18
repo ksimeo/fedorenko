@@ -11,36 +11,37 @@ import javax.persistence.Id;
 @Entity(name = "voice_list")
 public class Voice {
     @Id
-//    @GeneratedValue
-    private String id;
+    private long userId;
     @Column(name = "choice_party")
-    private int partyId;
+    private String partyId;
 
-    public Voice() {
-    }
+    public Voice() { }
 
-    public Voice(String id, int partyId) {
-        this.id = id;
+    public Voice(long userId, String partyId) {
+        this.userId = userId;
         this.partyId = partyId;
     }
 
-    public Voice(int partyId) {
+    public Voice(String partyId) {
         this.partyId = partyId;
     }
 
-    public String getId() {
-        return id;
+    public long getId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setId(long userId) {
+
+        this.userId = userId;
     }
 
-    public int getPartyId() {
+    public String getPartyId() {
+
         return partyId;
     }
 
-    public void setPartyId(int partyId) {
+    public void setPartyId(String partyId) {
+
         this.partyId = partyId;
     }
 }
