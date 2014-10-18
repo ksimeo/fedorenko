@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface IVoiceService {
 
-    boolean isDoneChoice(long userId);
+    boolean isDoneChoice(Long userId);
     void addNewVoice(Voice voice);
     List<Voice> getAllVoices();
     Voice getById (long id);

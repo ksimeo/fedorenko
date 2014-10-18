@@ -18,7 +18,7 @@ public class VoiceService implements IVoiceService {
     private VoiceRepository voiceRepository;
 
     @Override
-    public boolean isDoneChoice(long userId) {
+    public boolean isDoneChoice(Long userId) {
         return voiceRepository.exists(userId);
     }
 

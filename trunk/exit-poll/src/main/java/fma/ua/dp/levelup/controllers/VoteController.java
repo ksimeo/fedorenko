@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Admin on 05.10.2014.
@@ -29,51 +30,31 @@ public class VoteController {
     }
 
     @RequestMapping(value = "/voter_page", method = RequestMethod.POST)
-    public String doChoice(@RequestParam("voter_id") String voterId, @RequestParam("party_id") int partyId) {
+    public String doChoice(@RequestParam("voter_id") long voterId, @RequestParam("party_id") String partyId) {
         voiceService.addNewVoice(new Voice(voterId, partyId));
-        return "election_results";
+        return "/election_results";
     }
 
     @RequestMapping(value = "/election_results", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public Map showResults() {
         List voices = voiceService.getAllVoices();
-        Map<Integer, Long> results = new HashMap<>();
-        for(int i=0; i < voices.size(); i++) {
+        Map<String, Long> res = new TreeMap<>();
+        for(int i = 0; i < voices.size(); i++) {
             Voice v = (Voice)voices.get(i);
-            int partyId = v.getPartyId();
-            if(results.containsKey(partyId)) {
-                long res = results.get(partyId);
-                results.put(partyId, res+1);
+            String partyId = v.getPartyId();
+            if(res.containsKey(partyId)) {
+                long partyResult = res.get(partyId);
+                res.put(partyId, partyResult+1);
             } else {
-                results.put(partyId, 1L);
+                res.put(partyId, 1L);
             }
         }
-        return results;
+        return res;
+    }
+
+    @RequestMapping(value = "/voices_count", method = RequestMethod.GET)
+    public long voicesCount() {
+        return voiceService.getAllVoices().size();
     }
 }
-
-
-//    @RequestMapping(value = "/vote/{id}", method = RequestMethod.GET)
-////    @ResponseBody
-//    public String chekingChoice(@PathVariable("id") long userId) {
-//        if (voiceService.isDoneChoice(userId)) {
-//            return "election_results.jsp";
-//        } else {
-//            return "vote_page.jsp";
-//        }
-//    }
-//    @RequestMapping(value = "/vote_page", method = RequestMethod.POST)
-//    @ResponseBody
-//    public String doChoice(@RequestParam("user-id") long userId, @RequestParam("party-id") long partyId)
-//    {
-//        voiceService.addNewVoice(new Voice(userId, partyId));
-//        return "election_results.jsp";
-//    }
-
-//    @RequestMapping(value = "election_results", method = RequestMethod.GET, produces = "application/json")
-//    @ResponseBody
-//    public void showResults(Model model) {
-//        model.addAttribute("voices_list", voiceService.getAllVoices());
-//
-//    }

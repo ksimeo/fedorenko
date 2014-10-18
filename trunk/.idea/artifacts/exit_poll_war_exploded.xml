@@ -2,7 +2,6 @@
   <artifact type="exploded-war" name="exit-poll:war exploded">
     <output-path>$PROJECT_DIR$/exit-poll/target/VoteRest</output-path>
     <root id="root">
-      <element id="javaee-facet-resources" facet="exit-poll/web/Web" />
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="exit-poll" />
@@ -50,6 +49,7 @@
           </element>
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="exit-poll/web/Web" />
     </root>
   </artifact>
 </component>
