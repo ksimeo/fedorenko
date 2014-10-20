@@ -2,17 +2,14 @@ package fma.ua.dp.levelup.controllers;
 
 import fma.ua.dp.levelup.models.Voice;
 import fma.ua.dp.levelup.services.VoiceService;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * Created by Admin on 05.10.2014.
@@ -23,38 +20,28 @@ public class VoteController {
     @Autowired
     VoiceService voiceService;
 
-    @RequestMapping(value = "/vote", method = RequestMethod.POST)
+    @RequestMapping(value = "/vote", method = RequestMethod.GET)
     @ResponseBody
-    public boolean isMadeChoise(@RequestParam("voter_id") long voterId) {
+    public boolean isMadeChoise(@RequestParam("voter_id") String voterId) {
         return voiceService.isDoneChoice(voterId);
     }
 
-    @RequestMapping(value = "/voter_page", method = RequestMethod.POST)
-    public String doChoice(@RequestParam("voter_id") long voterId, @RequestParam("party_id") String partyId) {
-        voiceService.addNewVoice(new Voice(voterId, partyId));
+    @RequestMapping(value = "/voter_page", method = RequestMethod.POST, consumes = "application/json")
+    public String doChoice(@RequestBody String jsonData) throws IOException {
+        ObjectMapper om = new ObjectMapper();
+        Voice newVoice = om.readValue(jsonData, Voice.class);
+        voiceService.addNewVoice(newVoice);
         return "/election_results";
     }
 
     @RequestMapping(value = "/election_results", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public Map showResults() {
-        List voices = voiceService.getAllVoices();
-        Map<String, Long> res = new TreeMap<>();
-        for(int i = 0; i < voices.size(); i++) {
-            Voice v = (Voice)voices.get(i);
-            String partyId = v.getPartyId();
-            if(res.containsKey(partyId)) {
-                long partyResult = res.get(partyId);
-                res.put(partyId, partyResult+1);
-            } else {
-                res.put(partyId, 1L);
-            }
-        }
-        return res;
+    public List showResults() {
+        return voiceService.getAllVoices();
     }
 
     @RequestMapping(value = "/voices_count", method = RequestMethod.GET)
     public long voicesCount() {
-        return voiceService.getAllVoices().size();
+        return 0;
     }
 }

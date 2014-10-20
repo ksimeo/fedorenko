@@ -18,7 +18,7 @@ public class VoiceService implements IVoiceService {
     private VoiceRepository voiceRepository;
 
     @Override
-    public boolean isDoneChoice(Long userId) {
+    public boolean isDoneChoice(String userId) {
         return voiceRepository.exists(userId);
     }
 
@@ -33,7 +33,7 @@ public class VoiceService implements IVoiceService {
     }
 
     @Override
-    public Voice getById (long id) {
+    public Voice getById (String id) {
         return voiceRepository.findOne(id);
     }
 
@@ -41,4 +41,7 @@ public class VoiceService implements IVoiceService {
     public void clearAll() {
         voiceRepository.deleteAll();
     }
+
+    @Override
+    public long getTotalCount() {return voiceRepository.count();}
 }

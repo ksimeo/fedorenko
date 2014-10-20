@@ -2,11 +2,15 @@ package fma.ua.dp.levelup.controllers;
 
 import fma.ua.dp.levelup.models.Party;
 import fma.ua.dp.levelup.services.PartyService;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,29 +32,23 @@ public class PartyController {
 
     @RequestMapping(value = "/bulletin", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public Map getAllParties() {
-        Map toSend = new HashMap<String, String>();
-        List parties = ps.getAllParties();
-        for(int i=0; i < parties.size(); i++) {
-            Party p = (Party)parties.get(i);
-            toSend.put(p.getPartyName(), p.getPartyDescr());
-        }
-        return toSend;
+    public List<Party> getAllParties() {
+        List<Party> parties = ps.getAllParties();
+        return parties;
     }
 
-    @RequestMapping(value = "/add_new_party", method = RequestMethod.POST)
-    public String addNewParty(@RequestParam("party_name") String partyName, @RequestParam("party_descr") String partyDescr) {
-        ps.addParty(new Party(partyName, partyDescr));
+    @RequestMapping(value = "/add_new_party", method = RequestMethod.POST, consumes = "application/json")
+    public String addNewParty(@RequestBody String jsonData) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+        Party newParty = mapper.readValue(jsonData, Party.class);
+        ps.addParty(newParty);
         return "/bulletin";
     }
 
     @RequestMapping(value = "/get_party_by_id", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public Map getParty(@RequestParam("id") long id) {
-       Party party = ps.getById(id);
-        Map<String, String> toSend = new HashMap<String, String>();
-        toSend.put("name", party.getPartyName());
-        toSend.put("descr", party.getPartyDescr());
+    public Party getParty(@RequestParam("id") int id) {
+        Party toSend = ps.getById(id);
         return toSend;
     }
 

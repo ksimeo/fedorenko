@@ -19,23 +19,18 @@ public class PartyService implements IPartyService {
     private PartyRepository partyRepository;
 
     @Override
-    public void addParty(Party party) {
-        partyRepository.save(party);
+    public Party addParty(Party party) {
+        return partyRepository.save(party);
     }
 
     @Override
-    public Party getById(Long id) {
+    public Party getById(int id) {
         return partyRepository.findOne(id);
     }
 
     @Override
     public List<Party> getAllParties() {
         return (ArrayList)partyRepository.findAll();
-    }
-
-    @Override
-    public Long getLastId() {
-        return partyRepository.count();
     }
 
     @Override
