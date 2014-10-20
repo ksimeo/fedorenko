@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * Created by Admin on 28.09.2014.
  */
 @Repository
-public interface PartyRepository extends CrudRepository<Party, Long> {
+public interface PartyRepository extends CrudRepository<Party, Integer> {
 
 }

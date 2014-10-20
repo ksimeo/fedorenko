@@ -11,10 +11,9 @@ import java.util.Set;
  */
 public interface IPartyService {
 
-    void addParty(Party party);
-    Party getById(Long id);
+    Party addParty(Party party);
+    Party getById(int id);
     List<Party> getAllParties();
-    Long getLastId();
     void deleteParty(Party party);
     void dropAll();
 }

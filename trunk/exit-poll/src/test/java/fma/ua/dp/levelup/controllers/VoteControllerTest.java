@@ -1,10 +1,12 @@
 package fma.ua.dp.levelup.controllers;
 
+import fma.ua.dp.levelup.models.Party;
 import fma.ua.dp.levelup.models.Voice;
 import fma.ua.dp.levelup.services.IVoiceService;
 import fma.ua.dp.levelup.services.VoiceService;
 import junit.framework.Assert;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.JavaType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,81 +18,88 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.HashMap;
+import java.util.List;
 
-import static junit.framework.Assert.*;
+import static junit.framework.TestCase.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+
 /**
  * Created by Admin on 05.10.2014.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(locations = {"file:exit-poll/src/main/webapp/WEB-INF/dispatcher-servlet.xml"})
+@WebAppConfiguration
 public class VoteControllerTest {
 
     @InjectMocks
     private VoteController vc;
 
     @Autowired
-    private WebApplicationContext wac;
+    WebApplicationContext wac;
 
-//    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
     IVoiceService vs;
-
-    private MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
     @Before
     public void prepare() {
         MockitoAnnotations.initMocks(this);
-        this.mockMvc = MockMvcBuilders.standaloneSetup(vc).build();
-        vs = wac.getBean(VoiceService.class);
-        vs.addNewVoice(new Voice(1, 1));
-        vs.addNewVoice(new Voice(2, 2));
-        vs.addNewVoice(new Voice(3, 1));
-        vs.addNewVoice(new Voice(5, 3));
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
+//        vs = wac.getBean(VoiceService.class);
+        vs.addNewVoice(new Voice("ksimeo@gmail.com", 1));
+        vs.addNewVoice(new Voice("maksym.fedorenko@gmail.com", 2));
+//        vs.addNewVoice(new Voice("ximeo@mail.ru", 3));
     }
 
     @Test
     public void testCheckChoice() throws Exception {
-        this.mockMvc.perform(get("/vote").param("voter_id", "1L"))
+        MvcResult res = this.mockMvc.perform(get("/vote").param("voter_id", "ksimeo@gmail.com"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("false"));
-        this.mockMvc.perform(get("/vote").param("vote_id", "4L"))
+                .andReturn();
+        boolean data = Boolean.parseBoolean(res.getResponse().getContentAsString());
+        assertEquals(data, true);
+
+        MvcResult res1 = this.mockMvc.perform(get("/vote").param("vote_id", "office@mdc-design.com"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("true"));
+                .andReturn();
+//                .andExpect(content().string("false"));
+        boolean data1 = Boolean.parseBoolean(res.getResponse().getContentAsString());
+        assertEquals(data1, false);
     }
 
     @Test
     public void testDoChoice() throws Exception {
-        this.mockMvc.perform(get("/voter_page").param("voter_id", "4L").param("party_id", "3"))
+        Voice voice1 = new Voice("ximeo@mail.ru", 3);
+        ObjectMapper om = new ObjectMapper();
+        String data = om.writeValueAsString(voice1);
+        MvcResult res = this.mockMvc.perform(post("/voter_page").content(data).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("elections_results"));
-        Voice voice = vs.getById(4);
-        assertEquals(voice.getId(), 4L);
-        assertEquals(voice.getPartyId(), 3);
+                .andExpect(view().name("/elections_results")).andReturn();
     }
 
     @Test
     public void testShowResults() throws Exception {
-        this.mockMvc.perform(get("/election_results"))
+        MvcResult res = this.mockMvc.perform(get("/election_results"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-        MvcResult res = this.mockMvc.perform(get("/election_results")).andReturn();
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON)).andReturn();
         String data = res.getResponse().getContentAsString();
         ObjectMapper om = new ObjectMapper();
-        HashMap map = om.readValue(data, HashMap.class);
-        Object result1 = map.get(1);
-        Object result2 = map.get(2);
-        Object result3 = map.get(3);
-        assertEquals(result1, 2L);
-        assertEquals(result2, 1L);
-        assertEquals(result3, 2L);
+        JavaType type = om.getTypeFactory().
+                constructCollectionType(List.class, Voice.class);
+        List<Voice> voicesList = om.readValue(data, type);
+        assertEquals(false, voicesList.isEmpty());
     }
 
     @After
@@ -98,4 +107,3 @@ public class VoteControllerTest {
         vs.clearAll();
     }
 }
-
