@@ -20,9 +20,10 @@ public class VoteController {
     @Autowired
     VoiceService voiceService;
 
-    @RequestMapping(value = "/vote", method = RequestMethod.GET)
+    @RequestMapping(value = "/vote", method = RequestMethod.POST, produces = "application/json")
     @ResponseBody
     public boolean isMadeChoise(@RequestParam("voter_id") String voterId) {
+
         return voiceService.isDoneChoice(voterId);
     }
 

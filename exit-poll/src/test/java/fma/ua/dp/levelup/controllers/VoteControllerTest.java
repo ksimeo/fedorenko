@@ -86,7 +86,7 @@ public class VoteControllerTest {
         String data = om.writeValueAsString(voice1);
         MvcResult res = this.mockMvc.perform(post("/voter_page").content(data).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/elections_results")).andReturn();
+                .andExpect(view().name("/election_results")).andReturn();
     }
 
     @Test
