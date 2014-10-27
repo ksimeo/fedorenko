@@ -65,17 +65,16 @@ public class VoteControllerTest {
 
     @Test
     public void testCheckChoice() throws Exception {
-        MvcResult res = this.mockMvc.perform(get("/vote").param("voter_id", "ksimeo@gmail.com"))
+        MvcResult res = this.mockMvc.perform(post("/vote").param("voter_id", "ksimeo@gmail.com"))
                 .andExpect(status().isOk())
                 .andReturn();
         boolean data = Boolean.parseBoolean(res.getResponse().getContentAsString());
         assertEquals(data, true);
 
-        MvcResult res1 = this.mockMvc.perform(get("/vote").param("vote_id", "office@mdc-design.com"))
+        MvcResult res1 = this.mockMvc.perform(post("/vote").param("voter_id", "office@mdc-design.com"))
                 .andExpect(status().isOk())
                 .andReturn();
-//                .andExpect(content().string("false"));
-        boolean data1 = Boolean.parseBoolean(res.getResponse().getContentAsString());
+        boolean data1 = Boolean.parseBoolean(res1.getResponse().getContentAsString());
         assertEquals(data1, false);
     }
 

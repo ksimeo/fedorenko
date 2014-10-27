@@ -27,12 +27,18 @@ public class VoteController {
         return voiceService.isDoneChoice(voterId);
     }
 
-    @RequestMapping(value = "/voter_page", method = RequestMethod.POST, consumes = "application/json")
-    public String doChoice(@RequestBody String jsonData) throws IOException {
-        ObjectMapper om = new ObjectMapper();
-        Voice newVoice = om.readValue(jsonData, Voice.class);
-        voiceService.addNewVoice(newVoice);
-        return "/election_results";
+    @RequestMapping(value = "/voter_page", method = RequestMethod.POST, consumes = "application/json",produces = "application/json")
+    @ResponseBody
+    public boolean doChoice(@RequestBody String jsonData) {
+        try {
+            ObjectMapper om = new ObjectMapper();
+            Voice newVoice = om.readValue(jsonData, Voice.class);
+            voiceService.addNewVoice(newVoice);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @RequestMapping(value = "/election_results", method = RequestMethod.GET, produces = "application/json")
