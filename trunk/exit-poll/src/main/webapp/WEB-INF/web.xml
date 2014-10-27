@@ -5,7 +5,7 @@
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
 <servlet>
-    <servlet-name>dpServlet</servlet-name>
+    <servlet-name>dispatcher</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
     <!--<init-param>-->
         <!--<param-name>contextConfigLocation</param-name>-->
@@ -14,7 +14,7 @@
     <load-on-startup>1</load-on-startup>
 </servlet>
 <servlet-mapping>
-    <servlet-name>dpServlet</servlet-name>
-    <url-pattern>/vote/</url-pattern>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
 </servlet-mapping>
 </web-app>

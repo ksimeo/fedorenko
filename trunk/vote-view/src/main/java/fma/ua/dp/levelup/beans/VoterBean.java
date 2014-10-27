@@ -2,8 +2,12 @@ package fma.ua.dp.levelup.beans;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.ArrayDataModel;
 import javax.faces.model.DataModel;
+import javax.faces.model.ListDataModel;
+import javax.faces.model.SelectItem;
 
 import fma.ua.dp.levelup.communicat.IVoteSystem;
 import fma.ua.dp.levelup.communicat.VoteSystemRest;
@@ -11,46 +15,48 @@ import fma.ua.dp.levelup.models.Party;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Admin on 13.10.2014.
  */
-@Component
 @ManagedBean
-@SessionScoped
-public class VoterBean implements Serializable {
-
+@ViewScoped
+public class VoterBean {
     IVoteSystem vs = new VoteSystemRest();
-    private List<Party> parties = vs.getParties();
-    private boolean isError;
-    private Map<Long, Boolean> checked = new HashMap<Long, Boolean>();
+    private List<SelectItem> parties;
+    private int partySelected;
 
-    public String submit() {
-        Party checkedParty;
-        int checkCount = 0;
-        for (Party party : parties) {
-            if (checked.get(party.getId())) {
-                checkedParty = party;
-                checkCount++;
+    public VoterBean() {
+        try {
+            this.parties = new ArrayList<>();
+            List<Party> all = vs.getParties();
+            Iterator<Party> iter = all.iterator();
+            Party tmp;
+            while (iter.hasNext()) {
+                tmp = iter.next();
+                parties.add(new SelectItem(tmp.getId(), tmp.getPartyName(), tmp.getPartyDescr()));
             }
-        }
-
-//        if(checkCount == null && checkCount > 1) {
-//            isError = true;
-//        } else {
-            UserBean ub = new UserBean();
-            vs.vote(ub.getEmail(), checkedParty);
-            return "/election_results";
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private DataModel<Party> party = new ArrayDataModel<>(parties);
+    public String submit() throws Exception {
+        UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("userBean");
+        vs.vote(ub.getEmail(), partySelected);
+        return "election_results";
+    }
 
-    public DataModel<Party> getPartyList() {
-        return party;
+    public List<SelectItem> getParties() {
+        return parties;
+    }
+
+    public int getPartySelected() {
+        return partySelected;
+    }
+
+    public void setPartySelected(int partySelected) {
+        this.partySelected = partySelected;
     }
 }
