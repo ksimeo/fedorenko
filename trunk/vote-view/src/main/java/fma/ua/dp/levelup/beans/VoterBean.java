@@ -23,6 +23,7 @@ import java.util.*;
 @ManagedBean
 @ViewScoped
 public class VoterBean {
+
     IVoteSystem vs = new VoteSystemRest();
     private List<SelectItem> parties;
     private int partySelected;
@@ -45,7 +46,7 @@ public class VoterBean {
     public String submit() throws Exception {
         UserBean ub = (UserBean) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("userBean");
         vs.vote(ub.getEmail(), partySelected);
-        return "election_results";
+        return "current_results";
     }
 
     public List<SelectItem> getParties() {
