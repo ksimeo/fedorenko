@@ -33,7 +33,7 @@ public class VoiceService implements IVoiceService {
     }
 
     @Override
-    public Voice getById (String id) {
+    public Voice getById(String id) {
         return voiceRepository.findOne(id);
     }
 
