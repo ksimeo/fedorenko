@@ -6,6 +6,14 @@
   <packaging>pom</packaging>
   <version>1.0</version>
   <name>exit-poll_with_jsf</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+    </dependencies>
     <modules>
         <module>exit-poll</module>
         <module>vote-core</module>
